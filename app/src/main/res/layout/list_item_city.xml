@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal" >
+    android:background="?attr/selectableItemBackground"
+    android:orientation="horizontal"
+    android:padding="20dp">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -13,18 +15,25 @@
         <TextView
             android:id="@+id/city_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="São Paulo"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/country_code"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="Brasil"
+            android:textSize="12sp"/>
 
     </LinearLayout>
 
     <TextView
         android:id="@+id/city_temperature"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="27 ºC"
+        android:textSize="22sp"/>
 
 </LinearLayout>
