@@ -1,4 +1,4 @@
-package com.rodrigolessinger.forecast.api.extensions
+package com.rodrigolessinger.forecast.api.extension
 
 import rx.Observable
 import rx.Subscriber
