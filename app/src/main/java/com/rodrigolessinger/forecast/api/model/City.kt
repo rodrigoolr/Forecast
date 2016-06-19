@@ -11,5 +11,8 @@ class City(
         val weather: List<Weather>,
 
         @SerializedName("main")
-        val temperature: Temperature
+        val temperature: Temperature,
+
+        @SerializedName("sys")
+        val systemInfo: SystemInfo
 )

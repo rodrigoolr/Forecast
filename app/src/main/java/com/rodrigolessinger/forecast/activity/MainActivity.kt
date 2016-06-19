@@ -2,18 +2,21 @@ package com.rodrigolessinger.forecast.activity
 
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
-import android.util.Log
-import android.widget.Toast
 import com.rodrigolessinger.forecast.ActivityComponent
 import com.rodrigolessinger.forecast.R
+import com.rodrigolessinger.forecast.adapter.CityListAdapter
 import com.rodrigolessinger.forecast.api.client.WeatherClient
-import com.rodrigolessinger.forecast.api.extensions.observeOnMainThread
-import com.rodrigolessinger.forecast.api.extensions.subscribeOnIo
-import com.rodrigolessinger.forecast.api.extensions.subscribeOnce
+import com.rodrigolessinger.forecast.api.extension.filterNotNull
+import com.rodrigolessinger.forecast.api.extension.observeOnMainThread
+import com.rodrigolessinger.forecast.api.extension.subscribeOnIo
+import com.rodrigolessinger.forecast.api.extension.subscribeOnce
+import com.rodrigolessinger.forecast.api.model.City
 import com.rodrigolessinger.forecast.api.service.WeatherService
+import rx.Observable
 import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 
@@ -23,15 +26,20 @@ class MainActivity : AppCompatActivity() {
         private val TAG = "MAIN_ACTIVITY"
     }
 
+    private lateinit var component: ActivityComponent
+
     private val toolbar by lazy { findViewById(R.id.toolbar) as Toolbar }
     private val fab by lazy { findViewById(R.id.fab) as FloatingActionButton }
 
-    private lateinit var component: ActivityComponent
+    private val cityList by lazy { findViewById(R.id.city_list) as RecyclerView }
+    @Inject protected lateinit var adapter: CityListAdapter
 
     @Inject protected lateinit var client: WeatherClient
     private val service: WeatherService by lazy { client.createService(WeatherService::class.java) }
 
     private var subscriptions: CompositeSubscription? = null
+
+    private val CITIES_LIST = arrayOf("Sao Paulo", "Recife", "Lima")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +48,14 @@ class MainActivity : AppCompatActivity() {
 
         component = ActivityComponent.Initializer.init(this)
         component.inject(this)
+
+        cityList.setHasFixedSize(true)
+        cityList.layoutManager = LinearLayoutManager(this)
+        cityList.adapter = adapter
+    }
+
+    private fun getCityWeather(name: String): Observable<City?> {
+        return service.getCurrentWeatherByCityName(name).subscribeOnIo().onErrorReturn(null)
     }
 
     override fun onStart() {
@@ -47,30 +63,13 @@ class MainActivity : AppCompatActivity() {
 
         subscriptions = CompositeSubscription()
         subscriptions?.add(
-                service.getCurrentWeatherByCityName("Porto Alegre")
+                Observable.from(CITIES_LIST)
+                        .flatMap { getCityWeather(it) }
                         .subscribeOnIo()
+                        .filterNotNull()
+                        .toSortedList { cityA, cityB -> cityA.name.compareTo(cityB.name) }
                         .observeOnMainThread()
-                        .subscribeOnce(
-                                {
-                                    AlertDialog.Builder(this@MainActivity)
-                                            .setTitle(it.name)
-                                            .setMessage(
-                                                    "Main: %s\nTemp: %.0f\nMin: %.0f\nMax: %.0f\n Hum: %d%%".format(
-                                                            it.weather[0].main,
-                                                            it.temperature.temperature,
-                                                            it.temperature.minimumTemperature,
-                                                            it.temperature.maximumTemperature,
-                                                            it.temperature.humidity
-                                                    )
-                                            )
-                                            .create()
-                                            .show()
-                                },
-                                {
-                                    Log.e(TAG, "Error getting weather", it)
-                                    Toast.makeText(this@MainActivity, "Erro ao processar", Toast.LENGTH_LONG).show()
-                                }
-                        )
+                        .subscribeOnce { adapter.setData(it) }
         )
     }
 

@@ -21,6 +21,10 @@ fun <T> Observable<T>.subscribeOnIo(): Observable<T> {
     return this.subscribeOn(Schedulers.io())
 }
 
+fun <T> Observable<T?>.filterNotNull(): Observable<T> {
+    return this.filter { it != null }.map { it!! }
+}
+
 private abstract class OneShotSubscriber<T>() : Subscriber<T>() {
 
     abstract fun onErrorReceived(ex: Throwable?)

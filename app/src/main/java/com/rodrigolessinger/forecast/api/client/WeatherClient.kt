@@ -21,6 +21,9 @@ class WeatherClient @Inject constructor(
 ) {
 
     private val API_KEY_PARAMETER = "appid"
+    private val UNITS_PARAMETER = "units"
+    private val METRIC_SYSTEM = "metric"
+
     private val apiKey = resources.getString(R.string.open_weather_key)
 
     private val builder: Retrofit
@@ -33,6 +36,7 @@ class WeatherClient @Inject constructor(
 
                 val url = originalUrl.newBuilder()
                         .addQueryParameter(API_KEY_PARAMETER, apiKey)
+                        .addQueryParameter(UNITS_PARAMETER, METRIC_SYSTEM)
                         .build()
 
                 val requestBuilder = original.newBuilder().url(url)
