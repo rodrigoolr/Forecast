@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Forecast</string>
-    <string name="action_settings">Settings</string>
+    <string name="open_weather_key">faa1f1417f06f0d0486d3dbeb7229772</string>
 </resources>
