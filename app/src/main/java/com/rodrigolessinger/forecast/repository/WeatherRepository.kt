@@ -1,5 +1,6 @@
 package com.rodrigolessinger.forecast.repository
 
+import android.util.Log
 import com.rodrigolessinger.forecast.api.client.WeatherClient
 import com.rodrigolessinger.forecast.api.converter.CityWeatherConverter
 import com.rodrigolessinger.forecast.api.converter.ForecastConverter
@@ -14,10 +15,12 @@ import com.rodrigolessinger.forecast.model.Forecast
 import rx.Observable
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Created by Rodrigo on 20/06/2016.
  */
+@Singleton
 class WeatherRepository @Inject constructor(
         private val cache: WeatherCache,
         private val preferencesCache: PreferencesCache,
@@ -25,13 +28,48 @@ class WeatherRepository @Inject constructor(
 ) {
 
     companion object {
+        private val TAG = "WEATHER_REP"
+
         private val CITIES_LIST = arrayOf("Sao Paulo,BR", "Recife,BR", "Lima,PE", "Dublin,IE")
 
-        private val MINIMUM_CACHED_TIME = 15 * 60 * 1000
+        private val MINIMUM_UPDATE_TIME = 15 * 1000
+
+        private val MINIMUM_CACHED_TIME = 20 * 60 * 1000
         private val MAXIMUM_CACHED_TIME = 40 * 60 * 1000
     }
 
     private val service: WeatherService by lazy { client.createService(WeatherService::class.java) }
+
+    private val recentUpdates: MutableMap<Long, Date> = mutableMapOf()
+    private val recentForecastUpdates: MutableMap<Long, Date> = mutableMapOf()
+
+    private fun canUpdate(id: Long): Boolean {
+        synchronized(recentUpdates) {
+            if (recentUpdates.contains(id) && ! isAfter(recentUpdates[id], MINIMUM_UPDATE_TIME)) {
+                return false
+            } else {
+                recentUpdates.put(id, Date())
+                return true;
+            }
+        }
+    }
+
+    private fun onForecastUpdateFinished(id: Long) {
+        synchronized(recentForecastUpdates) {
+            recentForecastUpdates.remove(id)
+        }
+    }
+
+    private fun canUpdateForecast(id: Long): Boolean {
+        synchronized(recentForecastUpdates) {
+            if (recentForecastUpdates.contains(id) && ! isAfter(recentForecastUpdates[id], MINIMUM_UPDATE_TIME)) {
+                return false
+            } else {
+                recentForecastUpdates.put(id, Date())
+                return true;
+            }
+        }
+    }
 
     private fun obtainInitialCities() {
         CITIES_LIST.forEach { add(it) }
@@ -63,7 +101,7 @@ class WeatherRepository @Inject constructor(
                 .map {
                     it?.forEach {
                         if (isExpired(it.lastUpdate)) it.temperature = 0
-                        if (isUpdatable(it.lastUpdate)) update(it.id)
+                        if (isUpdatable(it.lastUpdate)) update(it)
                     }
 
                     it
@@ -76,19 +114,9 @@ class WeatherRepository @Inject constructor(
         return cityWeather
     }
 
-    private fun updateForecast(cityWeather: CityWeather) {
-        service.getForecast(cityWeather.id)
-                .convert(ForecastConverter())
-                .zipWith(
-                        Observable.just(cityWeather),
-                        { forecast, cityWeather -> updateForecast(cityWeather, forecast) }
-                )
-                .doOnNext { it.lastForecastUpdate = Date() }
-                .subscribeOnce { cache.update(it) }
-    }
-
     fun getDetail(id: Long): Observable<CityWeather?> {
-        return get().map { it?.firstOrNull { it.id == id } }
+        return cache.get()
+                .map { it?.firstOrNull { it.id == id } }
                 .map {
                     if (it != null && isExpired(it.lastForecastUpdate)) updateForecast(it, ArrayList())
                     else it
@@ -100,12 +128,42 @@ class WeatherRepository @Inject constructor(
                 }
     }
 
-    private fun update(id: Long) {
-        service.getCurrentWeatherByCityId(id)
+    private fun updateForecast(cityWeather: CityWeather) {
+        if (! canUpdateForecast(cityWeather.id)) return
+
+        service.getForecast(cityWeather.id)
+                .subscribeOnIo()
+                .convert(ForecastConverter())
+                .zipWith(
+                        Observable.just(cityWeather),
+                        { forecast, cityWeather -> updateForecast(cityWeather, forecast) }
+                )
+                .doOnNext { it.lastForecastUpdate = Date() }
+                .subscribeOnce(
+                        {
+                            cache.update(it)
+                            onForecastUpdateFinished(cityWeather.id)
+                        },
+                        {
+                            Log.e(TAG, "Error adding new city", it)
+                            onForecastUpdateFinished(cityWeather.id)
+                        }
+                )
+    }
+
+    private fun update(cityWeather: CityWeather) {
+        if (! canUpdate(cityWeather.id)) return
+
+        service.getCurrentWeatherByCityId(cityWeather.id)
                 .subscribeOnIo()
                 .convert(CityWeatherConverter())
                 .doOnNext { it.lastUpdate = Date() }
-                .subscribeOnce { cache.update(it) }
+                .doOnNext { it.forecast = cityWeather.forecast }
+                .doOnNext { it.lastForecastUpdate = cityWeather.lastForecastUpdate }
+                .subscribeOnce(
+                        { cache.update(it) },
+                        { Log.e(TAG, "Error updating weather information", it) }
+                )
     }
 
     fun add(cityName: String) {
@@ -113,7 +171,10 @@ class WeatherRepository @Inject constructor(
                 .subscribeOnIo()
                 .convert(CityWeatherConverter())
                 .doOnNext { it.lastUpdate = Date() }
-                .subscribeOnce { cache.add(it) }
+                .subscribeOnce(
+                        { cache.add(it) },
+                        { Log.e(TAG, "Error adding new city", it) }
+                )
     }
 
 }

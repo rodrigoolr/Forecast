@@ -5,7 +5,10 @@ import android.content.Context;
 import android.content.res.Resources;
 
 import com.rodrigolessinger.forecast.api.client.WeatherClient;
+import com.rodrigolessinger.forecast.cache.PreferencesCache;
+import com.rodrigolessinger.forecast.cache.WeatherCache;
 import com.rodrigolessinger.forecast.di.ForApplication;
+import com.rodrigolessinger.forecast.repository.WeatherRepository;
 
 import javax.inject.Singleton;
 
@@ -32,5 +35,11 @@ public interface ApplicationComponent {
     // Exported for child-components.
     @ForApplication Context applicationContext();
     @ForApplication Resources applicationResources();
+
     WeatherClient weatherClient();
+
+    WeatherRepository weatherRepository();
+
+    WeatherCache weatherCache();
+    PreferencesCache preferencesCache();
 }

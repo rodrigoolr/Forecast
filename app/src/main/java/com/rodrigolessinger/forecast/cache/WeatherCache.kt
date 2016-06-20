@@ -3,10 +3,12 @@ package com.rodrigolessinger.forecast.cache
 import com.rodrigolessinger.forecast.model.CityWeather
 import rx.Observable
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Created by Rodrigo on 20/06/2016.
  */
+@Singleton
 class WeatherCache @Inject constructor() : RealmCache<CityWeather>() {
 
     fun get(): Observable<List<CityWeather>?> {
