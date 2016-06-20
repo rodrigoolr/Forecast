@@ -2,12 +2,15 @@ package com.rodrigolessinger.forecast.activity
 
 import android.annotation.TargetApi
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
@@ -16,6 +19,7 @@ import android.widget.Toast
 import com.rodrigolessinger.forecast.R
 import com.rodrigolessinger.forecast.adapter.ForecastAdapter
 import com.rodrigolessinger.forecast.extension.observeOnMainThread
+import com.rodrigolessinger.forecast.model.CityWeather
 import com.rodrigolessinger.forecast.repository.WeatherRepository
 import javax.inject.Inject
 
@@ -54,6 +58,34 @@ class ForecastActivity : BaseActivity() {
     private var lightColor: Int = 0
     private var color: Int = 0
     private var darkColor: Int = 0
+
+    private fun deleteItem() {
+        AlertDialog.Builder(this)
+                .setMessage(R.string.confirm_delete_message)
+                .setPositiveButton(R.string.confirm_delete_positive) { dialog, which ->
+                    unsubscribe()
+                    repository.remove(CityWeather(id = cityId))
+                    finish()
+                }
+                .setNegativeButton(R.string.confirm_delete_negative, null)
+                .create()
+                .show()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_forecast, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_delete -> {
+                deleteItem()
+                return true;
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
 
     @TargetApi(21)
     private fun setupStatusBar() {

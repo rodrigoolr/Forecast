@@ -2,6 +2,10 @@
     <string name="app_name">Previsão do Tempo</string>
     <string name="language">pt</string>
 
+    <string name="menu_delete">Excluir</string>
+    <string name="confirm_delete_message">Excluir a previsão do tempo dessa cidade?</string>
+    <string name="confirm_delete_positive">EXCLUIR</string>
+    <string name="confirm_delete_negative">CANCELAR</string>
     <string name="error_getting_forecast">Ocorrreu um erro ao buscar a previsão para a cidade selecionada</string>
 
     <string name="today">Hoje</string>

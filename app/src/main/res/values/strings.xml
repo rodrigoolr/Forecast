@@ -10,6 +10,10 @@
         <item>Dublin,IE</item>
     </string-array>
 
+    <string name="menu_delete">Delete</string>
+    <string name="confirm_delete_message">Delete this city\'s forecast?</string>
+    <string name="confirm_delete_positive">DELETE</string>
+    <string name="confirm_delete_negative">CANCEL</string>
     <string name="error_getting_forecast">We could not obtain this city\'s forecast at the moment</string>
 
     <string name="today">Today</string>

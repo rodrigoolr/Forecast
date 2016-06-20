@@ -31,11 +31,14 @@ abstract class BaseActivity: AppCompatActivity() {
         onSubscribable()
     }
 
-    override fun onStop() {
-        super.onStop()
-
+    protected fun unsubscribe() {
         subscriptions?.unsubscribe()
         subscriptions = null
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unsubscribe()
     }
 
 }
