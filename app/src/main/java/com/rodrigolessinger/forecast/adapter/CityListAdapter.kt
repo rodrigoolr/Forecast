@@ -8,8 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.rodrigolessinger.forecast.R
 import com.rodrigolessinger.forecast.activity.ForecastActivity
-import com.rodrigolessinger.forecast.api.model.CityWeather
-import java.util.*
+import com.rodrigolessinger.forecast.model.CityWeather
 import javax.inject.Inject
 
 /**
@@ -27,17 +26,14 @@ class CityListAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: CityViewHolder, position: Int) {
-        val city = data[position]
+        val item = data[position]
 
-        val id = city.id
-        val name = city.name
-
-        val countryCode = city.systemInfo.contryCode
-        val countryName = Locale("", countryCode).displayCountry
-
-        val temperature = city.temperature.temperature.toInt().toString() + "ºC"
-
-        holder.bind(id, name, countryName, temperature)
+        holder.bind(
+                id = item.id,
+                name = item.cityName,
+                country = item.countryName,
+                temperature = item.temperature.toString() + "ºC"
+        )
     }
 
     override fun getItemCount(): Int {
@@ -56,7 +52,7 @@ class CityListAdapter @Inject constructor(
         private val countryView by lazy { view.findViewById(R.id.country_code) as TextView }
         private val temperatureView by lazy { view.findViewById(R.id.city_temperature) as TextView }
 
-        fun bind(id: Int, name: String, country: String, temperature: String) {
+        fun bind(id: Long, name: String, country: String, temperature: String) {
             nameView.text = name
             countryView.text = country
             temperatureView.text = temperature

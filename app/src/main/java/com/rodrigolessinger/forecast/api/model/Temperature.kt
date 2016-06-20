@@ -7,13 +7,5 @@ import com.google.gson.annotations.SerializedName
  */
 data class Temperature(
         @SerializedName("temp")
-        val temperature: Double,
-
-        val humidity: Int,
-
-        @SerializedName("temp_min")
-        val minimumTemperature: Double,
-
-        @SerializedName("temp_max")
-        val maximumTemperature: Double
+        val value: Double
 )

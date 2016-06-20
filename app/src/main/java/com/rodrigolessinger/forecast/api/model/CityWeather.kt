@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
  * Created by Rodrigo on 19/06/2016.
  */
 data class CityWeather(
-        val id: Int,
+        val id: Long,
         val name: String,
         val weather: List<Weather>,
 

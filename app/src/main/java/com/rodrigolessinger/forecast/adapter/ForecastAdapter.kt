@@ -8,9 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.rodrigolessinger.forecast.R
-import com.rodrigolessinger.forecast.api.model.Forecast
-import com.rodrigolessinger.forecast.api.model.ForecastWeather
 import com.rodrigolessinger.forecast.di.ForActivity
+import com.rodrigolessinger.forecast.model.Forecast
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Provider
@@ -27,11 +26,11 @@ class ForecastAdapter @Inject constructor(
         private val MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000
     }
 
-    private var data: List<Pair<Date, List<ForecastWeather>>> = arrayListOf()
+    private var data: List<Pair<Date, List<Forecast>>> = arrayListOf()
 
-    private fun getDateDay(date: Long): Date {
+    private fun getDateDay(date: Date): Date {
         val calendar = Calendar.getInstance()
-        calendar.time = Date(date)
+        calendar.time = date
 
         calendar.set(Calendar.MILLISECOND, 0)
         calendar.set(Calendar.SECOND, 0)
@@ -41,9 +40,9 @@ class ForecastAdapter @Inject constructor(
         return calendar.time
     }
 
-    fun setData(forecast: Forecast) {
-        this.data = forecast.list
-                .groupBy { getDateDay(it.date * 1000) }
+    fun setData(forecast: List<Forecast>) {
+        this.data = forecast
+                .groupBy { getDateDay(it.date) }
                 .toList()
                 .sortedBy { it.first }
 
@@ -73,7 +72,7 @@ class ForecastAdapter @Inject constructor(
     }
 
     private fun getTitle(date: Date): String {
-        val difference = date.time - getDateDay(Date().time).time
+        val difference = date.time - getDateDay(Date()).time
         val days = (difference / MILLISECONDS_PER_DAY).toInt()
 
         return when (days) {
@@ -111,7 +110,7 @@ class ForecastAdapter @Inject constructor(
             detailedForecast.isNestedScrollingEnabled = false
         }
 
-        fun bind(title: String, forecast: List<ForecastWeather>) {
+        fun bind(title: String, forecast: List<Forecast>) {
             titleView.text = title
             adapter.setData(forecast)
         }

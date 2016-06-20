@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.rodrigolessinger.forecast.R
-import com.rodrigolessinger.forecast.api.model.ForecastWeather
 import com.rodrigolessinger.forecast.di.ForActivity
+import com.rodrigolessinger.forecast.model.Forecast
 import java.util.*
 import javax.inject.Inject
 
@@ -19,9 +19,9 @@ class DetailedForecastAdapter @Inject constructor(
         @ForActivity private val context: Context
 ): RecyclerView.Adapter<DetailedForecastAdapter.DetailViewHolder>() {
 
-    private var data: List<ForecastWeather> = arrayListOf()
+    private var data: List<Forecast> = arrayListOf()
 
-    fun setData(data: List<ForecastWeather>) {
+    fun setData(data: List<Forecast>) {
         this.data = data
         notifyDataSetChanged()
     }
@@ -32,9 +32,9 @@ class DetailedForecastAdapter @Inject constructor(
         return DetailViewHolder(view)
     }
 
-    private fun getDateHour(date: Long): Int {
+    private fun getDateHour(date: Date): Int {
         val calendar = Calendar.getInstance()
-        calendar.timeInMillis = date
+        calendar.time = date
 
         return calendar.get(Calendar.HOUR_OF_DAY)
     }
@@ -42,8 +42,8 @@ class DetailedForecastAdapter @Inject constructor(
     override fun onBindViewHolder(holder: DetailViewHolder, position: Int) {
         val forecast = data[position]
 
-        val time = getDateHour(forecast.date * 1000).toString() + "h"
-        val temperature = forecast.temperature.temperature.toInt().toString() + "ºC"
+        val time = getDateHour(forecast.date).toString() + "h"
+        val temperature = forecast.temperature.toString() + "ºC"
 
         holder.bind(time, temperature)
     }

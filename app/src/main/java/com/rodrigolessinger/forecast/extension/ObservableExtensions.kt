@@ -1,5 +1,6 @@
 package com.rodrigolessinger.forecast.extension
 
+import com.rodrigolessinger.forecast.api.converter.ModelConverter
 import rx.Observable
 import rx.Subscriber
 import rx.Subscription
@@ -23,6 +24,10 @@ fun <T> Observable<T>.subscribeOnIo(): Observable<T> {
 
 fun <T> Observable<T?>.filterNotNull(): Observable<T> {
     return this.filter { it != null }.map { it!! }
+}
+
+fun <T, V> Observable<T>.convert(converter: ModelConverter<T, V>): Observable<V> {
+    return this.map { converter.convert(it) }
 }
 
 private abstract class OneShotSubscriber<T>() : Subscriber<T>() {

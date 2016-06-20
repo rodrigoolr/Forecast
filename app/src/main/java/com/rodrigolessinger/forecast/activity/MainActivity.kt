@@ -7,12 +7,10 @@ import android.support.v7.widget.RecyclerView
 import com.rodrigolessinger.forecast.R
 import com.rodrigolessinger.forecast.adapter.CityListAdapter
 import com.rodrigolessinger.forecast.api.client.WeatherClient
+import com.rodrigolessinger.forecast.api.converter.CityWeatherConverter
 import com.rodrigolessinger.forecast.api.model.CityWeather
 import com.rodrigolessinger.forecast.api.service.WeatherService
-import com.rodrigolessinger.forecast.extension.filterNotNull
-import com.rodrigolessinger.forecast.extension.observeOnMainThread
-import com.rodrigolessinger.forecast.extension.subscribeOnIo
-import com.rodrigolessinger.forecast.extension.subscribeOnce
+import com.rodrigolessinger.forecast.extension.*
 import rx.Observable
 import javax.inject.Inject
 
@@ -53,9 +51,10 @@ class MainActivity : BaseActivity() {
         addSubscription(
                 Observable.from(CITIES_LIST)
                         .flatMap { getCityWeather(it) }
-                        .subscribeOnIo()
                         .filterNotNull()
-                        .toSortedList { cityA, cityB -> cityA.name.compareTo(cityB.name) }
+                        .convert(CityWeatherConverter())
+                        .subscribeOnIo()
+                        .toSortedList { cityA, cityB -> cityA.cityName.compareTo(cityB.cityName) }
                         .observeOnMainThread()
                         .subscribeOnce { adapter.setData(it) }
         )

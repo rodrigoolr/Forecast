@@ -12,12 +12,12 @@ import rx.Observable
 interface  WeatherService {
 
     @GET("weather")
-    fun getCurrentWeatherByCityId(@Query("id") id: Int): Observable<CityWeather>
+    fun getCurrentWeatherByCityId(@Query("id") id: Long): Observable<CityWeather>
 
     @GET("weather")
     fun getCurrentWeatherByCityName(@Query("q") name: String): Observable<CityWeather>
 
     @GET("forecast")
-    fun getForecast(@Query("id") id: Int): Observable<Forecast>
+    fun getForecast(@Query("id") id: Long): Observable<Forecast>
 
 }
