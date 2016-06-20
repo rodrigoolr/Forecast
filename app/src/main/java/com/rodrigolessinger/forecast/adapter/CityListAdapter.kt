@@ -9,6 +9,7 @@ import android.widget.TextView
 import com.rodrigolessinger.forecast.R
 import com.rodrigolessinger.forecast.activity.ForecastActivity
 import com.rodrigolessinger.forecast.model.CityWeather
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -20,8 +21,8 @@ class CityListAdapter @Inject constructor(
 
     private var data: List<CityWeather> = arrayListOf()
 
-    fun setData(data: List<CityWeather>) {
-        this.data = data
+    fun setData(data: List<CityWeather>?) {
+        this.data = data ?: ArrayList()
         notifyDataSetChanged()
     }
 

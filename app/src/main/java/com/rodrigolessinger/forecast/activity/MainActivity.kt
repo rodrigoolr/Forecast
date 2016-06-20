@@ -6,12 +6,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.rodrigolessinger.forecast.R
 import com.rodrigolessinger.forecast.adapter.CityListAdapter
-import com.rodrigolessinger.forecast.api.client.WeatherClient
-import com.rodrigolessinger.forecast.api.converter.CityWeatherConverter
-import com.rodrigolessinger.forecast.api.model.CityWeather
-import com.rodrigolessinger.forecast.api.service.WeatherService
-import com.rodrigolessinger.forecast.extension.*
-import rx.Observable
+import com.rodrigolessinger.forecast.extension.observeOnMainThread
+import com.rodrigolessinger.forecast.repository.WeatherRepository
 import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
@@ -25,10 +21,7 @@ class MainActivity : BaseActivity() {
     private val cityList by lazy { findViewById(R.id.city_list) as RecyclerView }
     @Inject protected lateinit var adapter: CityListAdapter
 
-    @Inject protected lateinit var client: WeatherClient
-    private val service: WeatherService by lazy { client.createService(WeatherService::class.java) }
-
-    private val CITIES_LIST = arrayOf("Sao Paulo", "Recife", "Lima")
+    @Inject protected lateinit var repository: WeatherRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,20 +36,12 @@ class MainActivity : BaseActivity() {
         cityList.adapter = adapter
     }
 
-    private fun getCityWeather(name: String): Observable<CityWeather?> {
-        return service.getCurrentWeatherByCityName(name).subscribeOnIo().onErrorReturn(null)
-    }
-
     override fun onSubscribable() {
         addSubscription(
-                Observable.from(CITIES_LIST)
-                        .flatMap { getCityWeather(it) }
-                        .filterNotNull()
-                        .convert(CityWeatherConverter())
-                        .subscribeOnIo()
-                        .toSortedList { cityA, cityB -> cityA.cityName.compareTo(cityB.cityName) }
+                repository.get()
+                        .map { it?.sortedBy { it.cityName  } }
                         .observeOnMainThread()
-                        .subscribeOnce { adapter.setData(it) }
+                        .subscribe { adapter.setData(it) }
         )
     }
 
