@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Previsão do Tempo</string>
+    <string name="language">pt</string>
+
+    <string name="error_getting_forecast">Ocorrreu um erro ao buscar a previsão para a cidade selecionada</string>
+
+    <string name="today">Hoje</string>
+    <string name="tomorrow">Amanhã</string>
+    <string name="monday">Segunda-feira</string>
+    <string name="tuesday">Terça-feira</string>
+    <string name="wednesday">Quarta-feira</string>
+    <string name="thursday">Quinta-feira</string>
+    <string name="friday">Sexta-feira</string>
+    <string name="saturday">Sábado</string>
+    <string name="sunday">Domingo</string>
+    <string name="unknown" />
+
+    <string name="title_activity_add_city">Adicionar cidade</string>
+    <string name="city_hint">Cidade</string>
+    <string name="country_hint">País (opcional)</string>
+    <string name="search_button">PROCURAR</string>
+    <string name="invalid_city_name">O nome da cidade deve conter ao menos 3 caracteres</string>
+    <string name="invalid_country_name">O nome do país deve conter ao menos 2 caracteres</string>
+    <string name="add_city_message">Deseja adicionar {city}, {country}?</string>
+    <string name="add_city_confirm">ADICIONAR</string>
+    <string name="add_city_cancel">CANCELAR</string>
+    <string name="error_adding_city">Ocorreu um erro ao procurar por essa cidade</string>
+</resources>
