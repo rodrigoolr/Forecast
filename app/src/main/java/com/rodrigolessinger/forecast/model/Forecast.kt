@@ -9,7 +9,6 @@ import java.util.*
 open class Forecast(
         date: Date = Date(),
         weatherIcon: Int = 0,
-        weatherColoredIcon: Int = 0,
         temperature: Int = 0
 ) : RealmObject() {
 
@@ -17,9 +16,6 @@ open class Forecast(
         protected set
 
     var weatherIcon: Int = weatherIcon
-        protected set
-
-    var weatherColoredIcon: Int = weatherColoredIcon
         protected set
 
     var temperature: Int = temperature

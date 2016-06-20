@@ -12,23 +12,6 @@ class CityWeatherConverter : ModelConverter<com.rodrigolessinger.forecast.api.mo
     private fun getCountryName(countryCode: String): String {
         return Locale("", countryCode).displayName
     }
-
-    private fun getIcon(weatherCode: String): Int {
-        return when (weatherCode) {
-            "01d" -> R.drawable.clear
-            "01n" -> R.drawable.clear_night
-            "02d" -> R.drawable.few_clouds
-            "02n" -> R.drawable.few_clouds_night
-            "03d", "03n", "04d", "04n" -> R.drawable.cloudy
-            "09d", "09n" -> R.drawable.shower_rain
-            "10d" -> R.drawable.rain
-            "10n" -> R.drawable.rain_night
-            "11d", "11n" -> R.drawable.thunderstorm
-            "13d", "13n" -> R.drawable.snow
-            else -> 0
-        }
-    }
-
     private fun getColoredIcon(weatherCode: String): Int {
         return when (weatherCode) {
             "01d" -> R.drawable.clear_color
@@ -51,8 +34,8 @@ class CityWeatherConverter : ModelConverter<com.rodrigolessinger.forecast.api.mo
                 id = obj.id,
                 cityName = obj.name,
                 countryName = getCountryName(obj.systemInfo.contryCode),
-                weatherIcon = getIcon(obj.weather[0].icon),
-                weatherColoredIcon = getColoredIcon(obj.weather[0].icon),
+                weatherIcon = getColoredIcon(obj.weather[0].icon),
+                weatherDescription = obj.weather[0].description,
                 temperature = obj.temperature.value.toInt()
         )
     }

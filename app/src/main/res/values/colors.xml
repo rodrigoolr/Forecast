@@ -6,4 +6,25 @@
     <color name="colorAccentDark">#C51162</color>
 
     <color name="button_disabled">#DDD</color>
+    
+    <array name="weather_colors" >
+        <item>#D94555</item>
+        <item>#4B89DC</item>
+        <item>#F6BB43</item>
+        <item>#36BC9B</item>
+    </array>
+
+    <array name="weather_dark_colors" >
+        <item>#A61222</item>
+        <item>#1856A9</item>
+        <item>#C38810</item>
+        <item>#038968</item>
+    </array>
+
+    <array name="weather_light_colors" >
+        <item>#F35F6F</item>
+        <item>#65A3F6</item>
+        <item>#FFD55D</item>
+        <item>#50D6B5</item>
+    </array>
 </resources>

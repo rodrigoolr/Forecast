@@ -1,6 +1,7 @@
 package com.rodrigolessinger.forecast.adapter
 
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -28,6 +29,8 @@ class ForecastAdapter @Inject constructor(
 
     private var data: List<Pair<Date, List<Forecast>>> = arrayListOf()
 
+    private var color: Int = 0
+
     private fun getDateDay(date: Date): Date {
         val calendar = Calendar.getInstance()
         calendar.time = date
@@ -49,6 +52,11 @@ class ForecastAdapter @Inject constructor(
         notifyDataSetChanged()
     }
 
+    fun setColor(color: Int) {
+        this.color = color
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ForecastViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.list_item_forecast, parent, false);
@@ -60,11 +68,11 @@ class ForecastAdapter @Inject constructor(
         calendar.time = date
 
         return when(calendar.get(Calendar.DAY_OF_WEEK)) {
-            Calendar.MONDAY -> "Segunda-Feira"
-            Calendar.TUESDAY -> "Terça-Feira"
-            Calendar.WEDNESDAY -> "Quarta-Feira"
-            Calendar.THURSDAY -> "Quinta-Feira"
-            Calendar.FRIDAY -> "Sexta-Feira"
+            Calendar.MONDAY -> "Segunda-feira"
+            Calendar.TUESDAY -> "Terça-feira"
+            Calendar.WEDNESDAY -> "Quarta-feira"
+            Calendar.THURSDAY -> "Quinta-feira"
+            Calendar.FRIDAY -> "Sexta-feira"
             Calendar.SATURDAY -> "Sábado"
             Calendar.SUNDAY -> "Domingo"
             else -> ""
@@ -108,6 +116,7 @@ class ForecastAdapter @Inject constructor(
             detailedForecast.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             detailedForecast.adapter = adapter
             detailedForecast.isNestedScrollingEnabled = false
+            detailedForecast.background = ColorDrawable(color)
         }
 
         fun bind(title: String, forecast: List<Forecast>) {

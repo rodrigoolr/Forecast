@@ -3,19 +3,24 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
-    android:padding="20dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingBottom="14dp"
+    android:paddingTop="10dp"
     android:orientation="vertical" >
 
     <TextView
         android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="13h" />
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/weather_icon"
         android:layout_width="match_parent"
-        android:layout_height="25dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
         android:src="@drawable/few_clouds"
         android:scaleType="fitCenter"/>
 
@@ -24,6 +29,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="26ºC"/>
+        android:textColor="@android:color/white" />
 
 </LinearLayout>
