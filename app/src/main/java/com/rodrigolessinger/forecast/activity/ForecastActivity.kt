@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
@@ -43,6 +44,8 @@ class ForecastActivity : BaseActivity() {
     }
 
     @Inject protected lateinit var repository: WeatherRepository
+
+    private val swipeRefresh by lazy { findViewById(R.id.swipe_refresh) as SwipeRefreshLayout }
 
     private val content by lazy { findViewById(R.id.content) as View }
 
@@ -121,6 +124,10 @@ class ForecastActivity : BaseActivity() {
         forecastList.isNestedScrollingEnabled = false
 
         adapter.setColor(lightColor)
+
+        swipeRefresh.setOnRefreshListener {
+            repository.refreshForecast(cityId)
+        }
     }
 
     private fun onError() {
@@ -163,6 +170,12 @@ class ForecastActivity : BaseActivity() {
                 detailObservable
                         .map { it?.forecast }
                         .subscribe { adapter.setData(it) }
+        )
+
+        addSubscription(
+                repository.loadingForecastObservable
+                        .observeOnMainThread()
+                        .subscribe { swipeRefresh.isRefreshing = it }
         )
     }
 }

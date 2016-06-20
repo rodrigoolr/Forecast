@@ -2,6 +2,7 @@ package com.rodrigolessinger.forecast.activity
 
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.rodrigolessinger.forecast.R
@@ -17,6 +18,8 @@ class MainActivity : BaseActivity() {
     }
 
     private val addButton by lazy { findViewById(R.id.add_button) as FloatingActionButton }
+
+    private val swipeRefresh by lazy { findViewById(R.id.swipe_refresh) as SwipeRefreshLayout }
 
     private val cityList by lazy { findViewById(R.id.city_list) as RecyclerView }
     @Inject protected lateinit var adapter: CityListAdapter
@@ -36,6 +39,10 @@ class MainActivity : BaseActivity() {
         cityList.adapter = adapter
 
         addButton.setOnClickListener { AddCityActivity.startActivity(this@MainActivity) }
+
+        swipeRefresh.setOnRefreshListener {
+            repository.refresh()
+        }
     }
 
     override fun onSubscribable() {
@@ -44,6 +51,12 @@ class MainActivity : BaseActivity() {
                         .map { it?.sortedBy { it.cityName  } }
                         .observeOnMainThread()
                         .subscribe { adapter.setData(it) }
+        )
+
+        addSubscription(
+                repository.loadingObservable
+                        .observeOnMainThread()
+                        .subscribe { swipeRefresh.isRefreshing = it }
         )
     }
 

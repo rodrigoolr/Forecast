@@ -16,6 +16,7 @@ import com.rodrigolessinger.forecast.extension.subscribeOnce
 import com.rodrigolessinger.forecast.model.CityWeather
 import com.rodrigolessinger.forecast.model.Forecast
 import rx.Observable
+import rx.subjects.BehaviorSubject
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -45,33 +46,68 @@ class WeatherRepository @Inject constructor(
     private val service: WeatherService by lazy { client.createService(WeatherService::class.java) }
 
     private val recentUpdates: MutableMap<Long, Date> = mutableMapOf()
+    private val ongoingUpdates: MutableSet<Long> = mutableSetOf()
+    private val loadingSubject = BehaviorSubject.create<Boolean>(false)
+    val loadingObservable: Observable<Boolean> = loadingSubject
+
     private val recentForecastUpdates: MutableMap<Long, Date> = mutableMapOf()
+    private val ongoingForecastUpdates: MutableSet<Long> = mutableSetOf()
+    private val loadingForecastSubject = BehaviorSubject.create<Boolean>(false)
+    val loadingForecastObservable: Observable<Boolean> = loadingForecastSubject
 
     private val initialCitiesList = resources.getStringArray(R.array.initial_cities)
 
+    private fun updateLoadingSubject() {
+        loadingSubject.onNext(ongoingUpdates.size != 0)
+    }
+
+    private fun onUpdateFinished(id: Long) {
+        synchronized(ongoingUpdates) {
+            ongoingUpdates.remove(id)
+            updateLoadingSubject()
+        }
+    }
+
     private fun canUpdate(id: Long): Boolean {
-        synchronized(recentUpdates) {
+        synchronized(ongoingUpdates) {
             if (recentUpdates.contains(id) && ! isAfter(recentUpdates[id], MINIMUM_UPDATE_TIME)) {
+                updateLoadingSubject()
                 return false
+
             } else {
                 recentUpdates.put(id, Date())
+                ongoingUpdates.add(id)
+
+                updateLoadingSubject()
+
                 return true;
             }
         }
     }
 
+    private fun updateForecastLoadingSubject() {
+        loadingForecastSubject.onNext(ongoingForecastUpdates.size != 0)
+    }
+
     private fun onForecastUpdateFinished(id: Long) {
-        synchronized(recentForecastUpdates) {
-            recentForecastUpdates.remove(id)
+        synchronized(ongoingForecastUpdates) {
+            ongoingForecastUpdates.remove(id)
+            updateForecastLoadingSubject()
         }
     }
 
     private fun canUpdateForecast(id: Long): Boolean {
-        synchronized(recentForecastUpdates) {
+        synchronized(ongoingForecastUpdates) {
             if (recentForecastUpdates.contains(id) && ! isAfter(recentForecastUpdates[id], MINIMUM_UPDATE_TIME)) {
+                updateForecastLoadingSubject()
                 return false
+
             } else {
                 recentForecastUpdates.put(id, Date())
+                ongoingForecastUpdates.add(id)
+
+                updateForecastLoadingSubject()
+
                 return true;
             }
         }
@@ -157,6 +193,14 @@ class WeatherRepository @Inject constructor(
                 )
     }
 
+    fun refresh() {
+        get().flatMapIterable { it }.subscribeOnce { update(it) }
+    }
+
+    fun refreshForecast(id: Long) {
+        get().flatMapIterable { it }.filter { it.id == id }.subscribeOnce { updateForecast(it) }
+    }
+
     private fun update(cityWeather: CityWeather) {
         if (! canUpdate(cityWeather.id)) return
 
@@ -167,8 +211,14 @@ class WeatherRepository @Inject constructor(
                 .doOnNext { it.forecast = cityWeather.forecast }
                 .doOnNext { it.lastForecastUpdate = cityWeather.lastForecastUpdate }
                 .subscribeOnce(
-                        { cache.update(it) },
-                        { Log.e(TAG, "Error updating weather information", it) }
+                        {
+                            cache.update(it)
+                            onUpdateFinished(cityWeather.id)
+                        },
+                        {
+                            Log.e(TAG, "Error updating weather information", it)
+                            onUpdateFinished(cityWeather.id)
+                        }
                 )
     }
 
