@@ -11,9 +11,11 @@ import rx.android.schedulers.AndroidSchedulers
 import java.util.concurrent.atomic.AtomicReference
 
 /**
- * Created by Rodrigo on 14/04/2016.
+ * Base class to provide access to an object persisted on the Realm Database
+ * It handles all necessary threading logic, use {@link #getFindAllObservable} to execute queries
+ * Extend this class and provide get, update or remove methods for realm objects
  */
-open class RealmCache<T: RealmObject>() {
+abstract class RealmCache<T: RealmObject>() {
 
     protected fun getRealm(): Realm {
         return Realm.getDefaultInstance()

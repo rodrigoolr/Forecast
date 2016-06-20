@@ -6,7 +6,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Created by Rodrigo on 20/06/2016.
+ * Convenience class for obtaining weather-related objects from the database
+ * Use {@link #get} to retrieve all available forecasts
  */
 @Singleton
 class WeatherCache @Inject constructor() : RealmCache<CityWeather>() {

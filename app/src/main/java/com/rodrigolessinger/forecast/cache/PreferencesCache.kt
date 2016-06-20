@@ -6,7 +6,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Created by Rodrigo on 20/06/2016.
+ * Convenience class for obtaining the latest preferences from the database
+ * Use {@link #get} to retrieve updates in the user's {@link Preferences} object.
  */
 @Singleton
 class PreferencesCache @Inject constructor() : RealmCache<Preferences>() {
