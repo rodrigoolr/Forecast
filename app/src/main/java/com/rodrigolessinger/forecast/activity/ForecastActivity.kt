@@ -78,9 +78,9 @@ class ForecastActivity : BaseActivity() {
         color = resources.getIntArray(R.array.weather_colors)[colorId]
         darkColor = resources.getIntArray(R.array.weather_dark_colors)[colorId]
 
-        content.background = ColorDrawable(lightColor)
+        content.background = ColorDrawable(color)
 
-        toolbar.setBackgroundColor(color)
+        toolbar.setBackgroundColor(lightColor)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) setupStatusBar()
 
@@ -88,7 +88,7 @@ class ForecastActivity : BaseActivity() {
         forecastList.adapter = adapter
         forecastList.isNestedScrollingEnabled = false
 
-        adapter.setColor(color)
+        adapter.setColor(lightColor)
     }
 
     private fun onError() {
