@@ -1,7 +1,8 @@
 package com.rodrigolessinger.forecast.api.converter
 
 /**
- * Created by Rodrigo on 20/06/2016.
+ * Defines a contract that converts an API Model into an App model
+ * For convenience use {@link Observable#convert}
  */
 interface ModelConverter<T, V> {
     fun convert(obj: T): V

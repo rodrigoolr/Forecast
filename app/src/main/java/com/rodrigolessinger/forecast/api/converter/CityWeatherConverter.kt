@@ -6,7 +6,8 @@ import com.rodrigolessinger.forecast.model.CityWeather
 import java.util.*
 
 /**
- * Created by Rodrigo on 20/06/2016.
+ * Converts an CityWeather API Model into an CityWeather App model that can be persisted and displayed
+ * For convenience use {@link Observable#convert}
  */
 class CityWeatherConverter : ModelConverter<com.rodrigolessinger.forecast.api.model.CityWeather, CityWeather> {
 

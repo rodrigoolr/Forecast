@@ -6,7 +6,8 @@ import com.rodrigolessinger.forecast.model.Forecast
 import java.util.*
 
 /**
- * Created by Rodrigo on 20/06/2016.
+ * Converts an Forecast API Model into a list of Forecast App models that can be persisted and displayed
+ * For convenience use {@link Observable#convert}
  */
 class ForecastConverter : ModelConverter<com.rodrigolessinger.forecast.api.model.Forecast, List<Forecast>> {
 

@@ -14,7 +14,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Created by Rodrigo on 19/06/2016.
+ * Generates services that can be used by the application to call REST APIs
+ *
+ * Use {@link #createService} passing the interface containing Retrofit annotated API calls
+ * to create a service
  */
 @Singleton
 class WeatherClient @Inject constructor(
