@@ -9,6 +9,7 @@ import com.rodrigolessinger.forecast.api.converter.ForecastConverter
 import com.rodrigolessinger.forecast.api.service.WeatherService
 import com.rodrigolessinger.forecast.cache.PreferencesCache
 import com.rodrigolessinger.forecast.cache.WeatherCache
+import com.rodrigolessinger.forecast.di.ForApplication
 import com.rodrigolessinger.forecast.extension.convert
 import com.rodrigolessinger.forecast.extension.subscribeOnIo
 import com.rodrigolessinger.forecast.extension.subscribeOnce
@@ -24,7 +25,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class WeatherRepository @Inject constructor(
-        private val resources: Resources,
+        @ForApplication private val resources: Resources,
 
         private val cache: WeatherCache,
         private val preferencesCache: PreferencesCache,
@@ -105,7 +106,7 @@ class WeatherRepository @Inject constructor(
         return cache.get()
                 .map {
                     it?.forEach {
-                        if (isExpired(it.lastUpdate)) it.temperature = 0
+                        if (isExpired(it.lastUpdate)) it.temperature = Int.MIN_VALUE
                         if (isUpdatable(it.lastUpdate)) update(it)
                     }
 

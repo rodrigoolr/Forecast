@@ -117,7 +117,7 @@ class ForecastActivity : BaseActivity() {
 
         addSubscription(
                 detailObservable
-                        .map { it?.temperature.toString() }
+                        .map { if (it != null && it.temperature != Int.MIN_VALUE) it.temperature.toString() else "" }
                         .subscribe { currentTemperature.text = it }
         )
 

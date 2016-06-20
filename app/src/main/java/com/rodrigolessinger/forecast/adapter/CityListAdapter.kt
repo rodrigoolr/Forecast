@@ -34,12 +34,13 @@ class CityListAdapter @Inject constructor(
     override fun onBindViewHolder(holder: CityViewHolder, position: Int) {
         val item = data[position]
         val colorId = position % colorList.size
+        val temperature = if (item.temperature != Int.MIN_VALUE) item.temperature.toString() + "ºC" else ""
 
         holder.bind(
                 id = item.id,
                 name = item.cityName,
                 country = item.countryName,
-                temperature = item.temperature.toString() + "ºC",
+                temperature = temperature,
                 color = colorList[colorId],
                 colorId = colorId
         )

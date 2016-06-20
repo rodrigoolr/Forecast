@@ -10,7 +10,7 @@
         <item>Dublin,IE</item>
     </string-array>
 
-    <string name="error_getting_forecast">We could not obtan this city's forecast at the moment</string>
+    <string name="error_getting_forecast">We could not obtain this city\'s forecast at the moment</string>
 
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
