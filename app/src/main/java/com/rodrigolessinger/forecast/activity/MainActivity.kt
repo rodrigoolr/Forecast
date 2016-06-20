@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar
 import com.rodrigolessinger.forecast.R
 import com.rodrigolessinger.forecast.adapter.CityListAdapter
 import com.rodrigolessinger.forecast.api.client.WeatherClient
-import com.rodrigolessinger.forecast.api.model.City
+import com.rodrigolessinger.forecast.api.model.CityWeather
 import com.rodrigolessinger.forecast.api.service.WeatherService
 import com.rodrigolessinger.forecast.extension.filterNotNull
 import com.rodrigolessinger.forecast.extension.observeOnMainThread
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         cityList.adapter = adapter
     }
 
-    private fun getCityWeather(name: String): Observable<City?> {
+    private fun getCityWeather(name: String): Observable<CityWeather?> {
         return service.getCurrentWeatherByCityName(name).subscribeOnIo().onErrorReturn(null)
     }
 
