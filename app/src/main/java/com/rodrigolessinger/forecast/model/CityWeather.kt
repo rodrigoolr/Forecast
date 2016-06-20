@@ -4,6 +4,7 @@ import com.rodrigolessinger.forecast.extension.toRealmList
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
+import java.util.*
 
 /**
  * Created by Rodrigo on 20/06/2016.
@@ -12,8 +13,10 @@ open class CityWeather(
         id: Long = 0,
         cityName: String = "",
         countryName: String = "",
-        temperature: Int = 0,
-        forecast: List<Forecast> = arrayListOf()
+        var temperature: Int = 0,
+        forecast: List<Forecast> = arrayListOf(),
+        var lastUpdate: Date? = null,
+        var lastForecastUpdate: Date? = null
 ) : RealmObject() {
 
     @PrimaryKey
@@ -24,9 +27,6 @@ open class CityWeather(
         protected set
 
     var countryName: String = countryName
-        protected set
-
-    var temperature: Int = temperature
         protected set
 
     private var forecastRealmList: RealmList<Forecast> = forecast.toRealmList()
