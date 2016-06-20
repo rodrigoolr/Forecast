@@ -15,7 +15,8 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 /**
- * Created by armueller on 3/4/15.
+ * Component used to inject dependencies on the main application object
+ * Also used to provide Singleton instances to the activity-scoped objects
  */
 @Singleton
 @Component(modules = {ApplicationModule.class})

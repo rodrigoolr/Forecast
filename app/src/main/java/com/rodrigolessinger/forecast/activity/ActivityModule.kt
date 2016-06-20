@@ -8,6 +8,9 @@ import com.rodrigolessinger.forecast.di.PerActivity
 import dagger.Module
 import dagger.Provides
 
+/**
+ * Module that provides activity dependencies that cannot be initialized normally
+ */
 @Module
 open class ActivityModule(
         private val activity: Activity

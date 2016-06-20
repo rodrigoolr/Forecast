@@ -9,7 +9,9 @@ import com.rodrigolessinger.forecast.di.PerActivity;
 import dagger.Component;
 
 /**
- * Created by armueller on 3/4/15.
+ * Component used to inject dependencies on all activities
+ * Use the {@link Initializer} to get an instance for an activity
+ * and then the proper {@link #inject} method
  */
 @PerActivity
 @Component(dependencies = {ApplicationComponent.class}, modules = {ActivityModule.class})

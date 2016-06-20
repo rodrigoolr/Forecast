@@ -5,7 +5,7 @@ import javax.inject.Scope
 import kotlin.annotation.AnnotationRetention.RUNTIME
 
 /**
- * Created by Rodrigo on 21/12/2015.
+ * Scope used to attach an object lifetime to the current Activity
  */
 @Scope
 @Retention(RUNTIME)

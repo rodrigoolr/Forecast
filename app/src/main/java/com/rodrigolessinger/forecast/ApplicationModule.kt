@@ -8,6 +8,9 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
+/**
+ * Module that provides application dependencies that cannot be initialized normally
+ */
 @Module
 open class ApplicationModule(
         private val application: Application
