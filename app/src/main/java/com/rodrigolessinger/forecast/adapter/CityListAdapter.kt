@@ -29,7 +29,7 @@ class CityListAdapter @Inject constructor(
     override fun onBindViewHolder(holder: CityViewHolder, position: Int) {
         val city = data[position]
 
-        val id = city.id.toString()
+        val id = city.id
         val name = city.name
 
         val countryCode = city.systemInfo.contryCode
@@ -45,7 +45,7 @@ class CityListAdapter @Inject constructor(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityViewHolder {
-        val inflater = LayoutInflater.from(parent.getContext())
+        val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.list_item_city, parent, false);
         return CityViewHolder(view)
     }
@@ -56,7 +56,7 @@ class CityListAdapter @Inject constructor(
         private val countryView by lazy { view.findViewById(R.id.country_code) as TextView }
         private val temperatureView by lazy { view.findViewById(R.id.city_temperature) as TextView }
 
-        fun bind(id: String, name: String, country: String, temperature: String) {
+        fun bind(id: Int, name: String, country: String, temperature: String) {
             nameView.text = name
             countryView.text = country
             temperatureView.text = temperature

@@ -1,7 +1,7 @@
 package com.rodrigolessinger.forecast.api.service
 
 import com.rodrigolessinger.forecast.api.model.CityWeather
-import com.rodrigolessinger.forecast.api.model.ForecastWeather
+import com.rodrigolessinger.forecast.api.model.Forecast
 import retrofit2.http.GET
 import retrofit2.http.Query
 import rx.Observable
@@ -17,7 +17,7 @@ interface  WeatherService {
     @GET("weather")
     fun getCurrentWeatherByCityName(@Query("q") name: String): Observable<CityWeather>
 
-    @GET("weather")
-    fun getForecast(@Query("id") id: Int): Observable<ForecastWeather>
+    @GET("forecast")
+    fun getForecast(@Query("id") id: Int): Observable<Forecast>
 
 }
