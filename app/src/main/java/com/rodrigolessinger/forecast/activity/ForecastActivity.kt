@@ -92,7 +92,7 @@ class ForecastActivity : BaseActivity() {
     }
 
     private fun onError() {
-        Toast.makeText(this, "Ocorrreu um erro ao buscar a previsão para a cidade selecionada", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, R.string.error_getting_forecast, Toast.LENGTH_LONG).show()
         finish()
     }
 

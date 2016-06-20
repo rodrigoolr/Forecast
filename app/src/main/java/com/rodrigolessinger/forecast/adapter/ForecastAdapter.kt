@@ -63,29 +63,29 @@ class ForecastAdapter @Inject constructor(
         return ForecastViewHolder(view, adapterProvider.get())
     }
 
-    private fun getWeekDayString(date: Date): String {
+    private fun getWeekDayString(date: Date): Int {
         val calendar = Calendar.getInstance()
         calendar.time = date
 
         return when(calendar.get(Calendar.DAY_OF_WEEK)) {
-            Calendar.MONDAY -> "Segunda-feira"
-            Calendar.TUESDAY -> "Terça-feira"
-            Calendar.WEDNESDAY -> "Quarta-feira"
-            Calendar.THURSDAY -> "Quinta-feira"
-            Calendar.FRIDAY -> "Sexta-feira"
-            Calendar.SATURDAY -> "Sábado"
-            Calendar.SUNDAY -> "Domingo"
-            else -> ""
+            Calendar.MONDAY ->      R.string.monday
+            Calendar.TUESDAY ->     R.string.tuesday
+            Calendar.WEDNESDAY ->   R.string.wednesday
+            Calendar.THURSDAY ->    R.string.thursday
+            Calendar.FRIDAY ->      R.string.friday
+            Calendar.SATURDAY ->    R.string.saturday
+            Calendar.SUNDAY ->      R.string.sunday
+            else ->                 R.string.unknown
         }
     }
 
-    private fun getTitle(date: Date): String {
+    private fun getTitle(date: Date): Int {
         val difference = date.time - getDateDay(Date()).time
         val days = (difference / MILLISECONDS_PER_DAY).toInt()
 
         return when (days) {
-            0 -> "Hoje"
-            1 -> "Amanhã"
+            0 ->    R.string.today
+            1 ->    R.string.tomorrow
             else -> getWeekDayString(date)
         }
     }
@@ -93,7 +93,7 @@ class ForecastAdapter @Inject constructor(
     override fun onBindViewHolder(holder: ForecastViewHolder, position: Int) {
         val item = data[position]
 
-        val title = getTitle(item.first)
+        val title = context.getString(getTitle(item.first))
         val forecast = item.second
 
         holder.bind(title, forecast)

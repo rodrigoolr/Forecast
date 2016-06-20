@@ -1,6 +1,8 @@
 package com.rodrigolessinger.forecast.repository
 
+import android.content.res.Resources
 import android.util.Log
+import com.rodrigolessinger.forecast.R
 import com.rodrigolessinger.forecast.api.client.WeatherClient
 import com.rodrigolessinger.forecast.api.converter.CityWeatherConverter
 import com.rodrigolessinger.forecast.api.converter.ForecastConverter
@@ -22,15 +24,16 @@ import javax.inject.Singleton
  */
 @Singleton
 class WeatherRepository @Inject constructor(
+        private val resources: Resources,
+
         private val cache: WeatherCache,
         private val preferencesCache: PreferencesCache,
+
         private val client: WeatherClient
 ) {
 
     companion object {
         private val TAG = "WEATHER_REP"
-
-        private val CITIES_LIST = arrayOf("Sao Paulo,BR", "Recife,BR", "Lima,PE", "Dublin,IE")
 
         private val MINIMUM_UPDATE_TIME = 15 * 1000
 
@@ -42,6 +45,8 @@ class WeatherRepository @Inject constructor(
 
     private val recentUpdates: MutableMap<Long, Date> = mutableMapOf()
     private val recentForecastUpdates: MutableMap<Long, Date> = mutableMapOf()
+
+    private val initialCitiesList = resources.getStringArray(R.array.initial_cities)
 
     private fun canUpdate(id: Long): Boolean {
         synchronized(recentUpdates) {
@@ -72,7 +77,7 @@ class WeatherRepository @Inject constructor(
     }
 
     private fun obtainInitialCities() {
-        CITIES_LIST.forEach { add(it) }
+        initialCitiesList.forEach { add(it) }
     }
 
     private fun onEmpty() {

@@ -1,6 +1,26 @@
 <resources>
-    <string name="app_name">Forecast</string>
+    <string name="app_name">Previsão do Tempo</string>
     <string name="open_weather_key">faa1f1417f06f0d0486d3dbeb7229772</string>
+
+    <string name="error_getting_forecast">Ocorrreu um erro ao buscar a previsão para a cidade selecionada</string>
+
+    <string-array name="initial_cities">
+        <item>Sao Paulo,BR</item>
+        <item>Recife,BR</item>
+        <item>Lima,PE</item>
+        <item>Dublin,IE</item>
+    </string-array>
+
+    <string name="today">Hoje</string>
+    <string name="tomorrow">Amanhã</string>
+    <string name="monday">Segunda-feira</string>
+    <string name="tuesday">Terça-feira</string>
+    <string name="wednesday">Quarta-feira</string>
+    <string name="thursday">Quinta-feira</string>
+    <string name="friday">Sexta-feira</string>
+    <string name="saturday">Sábado</string>
+    <string name="sunday">Domingo</string>
+    <string name="unknown" />
 
     <string name="title_activity_add_city">Adicionar cidade</string>
     <string name="city_hint">Cidade</string>
