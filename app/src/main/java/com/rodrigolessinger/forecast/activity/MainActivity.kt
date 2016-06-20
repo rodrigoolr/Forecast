@@ -9,12 +9,12 @@ import android.support.v7.widget.Toolbar
 import com.rodrigolessinger.forecast.R
 import com.rodrigolessinger.forecast.adapter.CityListAdapter
 import com.rodrigolessinger.forecast.api.client.WeatherClient
-import com.rodrigolessinger.forecast.api.extension.filterNotNull
-import com.rodrigolessinger.forecast.api.extension.observeOnMainThread
-import com.rodrigolessinger.forecast.api.extension.subscribeOnIo
-import com.rodrigolessinger.forecast.api.extension.subscribeOnce
 import com.rodrigolessinger.forecast.api.model.City
 import com.rodrigolessinger.forecast.api.service.WeatherService
+import com.rodrigolessinger.forecast.extension.filterNotNull
+import com.rodrigolessinger.forecast.extension.observeOnMainThread
+import com.rodrigolessinger.forecast.extension.subscribeOnIo
+import com.rodrigolessinger.forecast.extension.subscribeOnce
 import rx.Observable
 import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
