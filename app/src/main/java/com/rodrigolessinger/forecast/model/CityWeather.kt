@@ -13,6 +13,8 @@ open class CityWeather(
         id: Long = 0,
         cityName: String = "",
         countryName: String = "",
+        weatherIcon: Int = 0,
+        weatherColoredIcon: Int = 0,
         var temperature: Int = 0,
         forecast: List<Forecast> = arrayListOf(),
         var lastUpdate: Date? = null,
@@ -27,6 +29,12 @@ open class CityWeather(
         protected set
 
     var countryName: String = countryName
+        protected set
+
+    var weatherIcon: Int = weatherIcon
+        protected set
+
+    var weatherColoredIcon: Int = weatherColoredIcon
         protected set
 
     private var forecastRealmList: RealmList<Forecast> = forecast.toRealmList()

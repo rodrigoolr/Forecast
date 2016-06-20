@@ -1,10 +1,13 @@
 package com.rodrigolessinger.forecast.adapter
 
 import android.content.Context
+import android.content.res.Resources
+import android.graphics.drawable.Drawable
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import com.rodrigolessinger.forecast.R
 import com.rodrigolessinger.forecast.di.ForActivity
@@ -16,7 +19,8 @@ import javax.inject.Inject
  * Created by Rodrigo on 19/06/2016.
  */
 class DetailedForecastAdapter @Inject constructor(
-        @ForActivity private val context: Context
+        @ForActivity private val context: Context,
+        @ForActivity private val resources: Resources
 ): RecyclerView.Adapter<DetailedForecastAdapter.DetailViewHolder>() {
 
     private var data: List<Forecast> = arrayListOf()
@@ -43,9 +47,10 @@ class DetailedForecastAdapter @Inject constructor(
         val forecast = data[position]
 
         val time = getDateHour(forecast.date).toString() + "h"
+        val drawable = resources.getDrawable(forecast.weatherIcon, context.theme)
         val temperature = forecast.temperature.toString() + "ºC"
 
-        holder.bind(time, temperature)
+        holder.bind(time, drawable, temperature)
     }
 
     override fun getItemCount(): Int {
@@ -55,10 +60,12 @@ class DetailedForecastAdapter @Inject constructor(
     inner class DetailViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
 
         private val timeView by lazy { view.findViewById(R.id.time) as TextView }
+        private val weatherView by lazy { view.findViewById(R.id.weather_icon) as ImageView }
         private val temperatureView by lazy { view.findViewById(R.id.temperature) as TextView }
 
-        fun bind(time: String, temperature: String) {
+        fun bind(time: String, drawable: Drawable, temperature: String) {
             timeView.text = time
+            weatherView.setImageDrawable(drawable)
             temperatureView.text = temperature
         }
 

@@ -12,6 +12,13 @@
         android:layout_height="wrap_content"
         android:text="13h" />
 
+    <ImageView
+        android:id="@+id/weather_icon"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:src="@drawable/few_clouds"
+        android:scaleType="fitCenter"/>
+
     <TextView
         android:id="@+id/temperature"
         android:layout_width="wrap_content"

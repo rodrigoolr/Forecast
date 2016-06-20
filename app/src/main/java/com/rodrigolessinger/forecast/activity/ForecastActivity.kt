@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.rodrigolessinger.forecast.R
@@ -32,6 +33,7 @@ class ForecastActivity : BaseActivity() {
 
     @Inject protected lateinit var repository: WeatherRepository
 
+    private val currentWeather by lazy { findViewById(R.id.weather_icon) as ImageView }
     private val currentTemperature by lazy { findViewById(R.id.current_temperature) as TextView }
 
     private val forecastList by lazy { findViewById(R.id.forecast_list) as RecyclerView }
@@ -61,14 +63,28 @@ class ForecastActivity : BaseActivity() {
     }
 
     override fun onSubscribable() {
-        addSubscription(
+        val detailObservable =
                 repository.getDetail(cityId)
                         .doOnNext { if (it == null) onError() }
                         .observeOnMainThread()
-                        .subscribe {
-                            currentTemperature.text = it?.temperature.toString()
-                            adapter.setData(it?.forecast)
-                        }
+
+        addSubscription(
+                detailObservable
+                        .map { it?.weatherColoredIcon }
+                        .map { if (it != null && it != 0) getDrawable(it) else null }
+                        .subscribe { currentWeather.setImageDrawable(it) }
+        )
+
+        addSubscription(
+                detailObservable
+                        .map { it?.temperature.toString() }
+                        .subscribe { currentTemperature.text = it }
+        )
+
+        addSubscription(
+                detailObservable
+                        .map { it?.forecast }
+                        .subscribe { adapter.setData(it) }
         )
     }
 }
