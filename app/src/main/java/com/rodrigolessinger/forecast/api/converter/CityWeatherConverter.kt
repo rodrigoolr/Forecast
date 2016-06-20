@@ -1,6 +1,7 @@
 package com.rodrigolessinger.forecast.api.converter
 
 import com.rodrigolessinger.forecast.R
+import com.rodrigolessinger.forecast.api.exception.InvalidModelException
 import com.rodrigolessinger.forecast.model.CityWeather
 import java.util.*
 
@@ -30,6 +31,8 @@ class CityWeatherConverter : ModelConverter<com.rodrigolessinger.forecast.api.mo
 
 
     override fun convert(obj: com.rodrigolessinger.forecast.api.model.CityWeather): CityWeather {
+        if (obj.code < 200 || obj.code > 299) throw InvalidModelException("Got error code: " + obj.code.toString())
+
         return CityWeather(
                 id = obj.id,
                 cityName = obj.name,
