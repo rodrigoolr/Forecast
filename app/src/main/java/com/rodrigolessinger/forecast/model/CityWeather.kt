@@ -30,7 +30,8 @@ open class CityWeather(
         protected set
 
     private var forecastRealmList: RealmList<Forecast> = forecast.toRealmList()
-    val forecast: List<Forecast>
-        get() = forecastRealmList
+    var forecast: List<Forecast>
+        get() { return forecastRealmList }
+        set(value) { forecastRealmList = value.toRealmList() }
 
 }

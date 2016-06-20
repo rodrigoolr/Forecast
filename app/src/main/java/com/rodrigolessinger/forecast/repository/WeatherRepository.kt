@@ -2,6 +2,7 @@ package com.rodrigolessinger.forecast.repository
 
 import com.rodrigolessinger.forecast.api.client.WeatherClient
 import com.rodrigolessinger.forecast.api.converter.CityWeatherConverter
+import com.rodrigolessinger.forecast.api.converter.ForecastConverter
 import com.rodrigolessinger.forecast.api.service.WeatherService
 import com.rodrigolessinger.forecast.cache.PreferencesCache
 import com.rodrigolessinger.forecast.cache.WeatherCache
@@ -40,6 +41,24 @@ class WeatherRepository @Inject constructor(
     fun get(): Observable<List<CityWeather>?> {
         return cache.get()
                 .doOnNext { if (it == null || it.isEmpty()) onEmpty() }
+    }
+
+    private fun onForecastEmpty(cityWeather: CityWeather) {
+        service.getForecast(cityWeather.id)
+                .convert(ForecastConverter())
+                .zipWith(
+                        Observable.just(cityWeather),
+                        { forecast, cityWeather ->
+                            cityWeather.forecast = forecast
+                            cityWeather
+                        }
+                )
+                .subscribeOnce { cache.update(it) }
+    }
+
+    fun getDetail(id: Long): Observable<CityWeather?> {
+        return get().map { it?.firstOrNull { it.id == id } }
+                .doOnNext { if (it != null && it.forecast.size == 0) onForecastEmpty(it) }
     }
 
     fun add(cityName: String) {

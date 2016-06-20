@@ -40,8 +40,8 @@ class ForecastAdapter @Inject constructor(
         return calendar.time
     }
 
-    fun setData(forecast: List<Forecast>) {
-        this.data = forecast
+    fun setData(forecast: List<Forecast>?) {
+        this.data = forecast.orEmpty()
                 .groupBy { getDateDay(it.date) }
                 .toList()
                 .sortedBy { it.first }

@@ -5,17 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.widget.TextView
+import android.widget.Toast
 import com.rodrigolessinger.forecast.R
 import com.rodrigolessinger.forecast.adapter.ForecastAdapter
-import com.rodrigolessinger.forecast.api.client.WeatherClient
-import com.rodrigolessinger.forecast.api.converter.CityWeatherConverter
-import com.rodrigolessinger.forecast.api.converter.ForecastConverter
-import com.rodrigolessinger.forecast.api.service.WeatherService
-import com.rodrigolessinger.forecast.extension.convert
 import com.rodrigolessinger.forecast.extension.observeOnMainThread
-import com.rodrigolessinger.forecast.extension.subscribeOnIo
+import com.rodrigolessinger.forecast.repository.WeatherRepository
 import javax.inject.Inject
 
 class ForecastActivity : BaseActivity() {
@@ -35,8 +30,7 @@ class ForecastActivity : BaseActivity() {
 
     }
 
-    @Inject protected lateinit var client: WeatherClient
-    private val service: WeatherService by lazy { client.createService(WeatherService::class.java) }
+    @Inject protected lateinit var repository: WeatherRepository
 
     private val currentTemperature by lazy { findViewById(R.id.current_temperature) as TextView }
 
@@ -61,27 +55,20 @@ class ForecastActivity : BaseActivity() {
         forecastList.adapter = adapter
     }
 
+    private fun onError() {
+        Toast.makeText(this, "Ocorrreu um erro ao buscar a previsão para a cidade selecionada", Toast.LENGTH_LONG).show()
+        finish()
+    }
+
     override fun onSubscribable() {
         addSubscription(
-                service.getCurrentWeatherByCityId(cityId)
-                        .convert(CityWeatherConverter())
-                        .subscribeOnIo()
+                repository.getDetail(cityId)
+                        .doOnNext { if (it == null) onError() }
                         .observeOnMainThread()
-                        .subscribe(
-                                { currentTemperature.text = it.temperature.toString() },
-                                { Log.e(TAG, "Error loading current temperature", it) }
-                        )
-        )
-
-        addSubscription(
-                service.getForecast(cityId)
-                        .convert(ForecastConverter())
-                        .subscribeOnIo()
-                        .observeOnMainThread()
-                        .subscribe(
-                                { adapter.setData(it) },
-                                { Log.e(TAG, "Error getting forecast", it) }
-                        )
+                        .subscribe {
+                            currentTemperature.text = it?.temperature.toString()
+                            adapter.setData(it?.forecast)
+                        }
         )
     }
 }
