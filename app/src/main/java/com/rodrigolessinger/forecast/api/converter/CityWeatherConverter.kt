@@ -31,7 +31,7 @@ class CityWeatherConverter : ModelConverter<com.rodrigolessinger.forecast.api.mo
 
 
     override fun convert(obj: com.rodrigolessinger.forecast.api.model.CityWeather): CityWeather {
-        if (obj.code < 200 || obj.code > 299) throw InvalidModelException("Got error code: " + obj.code.toString())
+        if (obj.code != 0 && (obj.code < 200 || obj.code > 299)) throw InvalidModelException("Got error code: " + obj.code.toString())
 
         return CityWeather(
                 id = obj.id,

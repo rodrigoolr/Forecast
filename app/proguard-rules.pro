@@ -16,8 +16,8 @@
 #   public *;
 #}
 
--keep class com.rodrigolessinger.forecast.model
--keep class com.rodrigolessinger.forecast.api.model
+-keep class com.rodrigolessinger.forecast.model.**
+-keep class com.rodrigolessinger.forecast.api.model.**
 
 ### Retrofit
 -dontwarn retrofit2.**
@@ -40,6 +40,7 @@
 -keepattributes EnclosingMethod
 
 # Gson specific classes
+-dontwarn sun.misc.Unsafe
 -keep class sun.misc.Unsafe { *; }
 -keep class com.google.gson.stream.** { *; }
 
@@ -63,3 +64,36 @@
 -keep class rx.schedulers.Schedulers {
     public static ** test();
 }
+
+### Support Library
+-keep class android.support.v7.widget.RoundRectDrawable { *; }
+-keep public class android.support.v7.widget.** { *; }
+-keep public class android.support.v7.internal.widget.** { *; }
+-keep public class android.support.v7.internal.view.menu.** { *; }
+
+-keep public class * extends android.support.v4.view.ActionProvider {
+    public <init>(android.content.Context);
+}
+-dontwarn android.support.design.**
+-keep class android.support.design.** { *; }
+-keep interface android.support.design.** { *; }
+-keep public class android.support.design.R$* { *; }
+
+### Realm
+
+-keep class io.realm.annotations.RealmModule
+-keep @io.realm.annotations.RealmModule class *
+-keep class io.realm.internal.Keep
+-keep @io.realm.internal.Keep class *
+-dontwarn javax.**
+-dontwarn io.realm.**
+
+# Keep native methods
+-keepclassmembers class * {
+    native <methods>;
+}
+
+-dontwarn okio.**
+-dontwarn javax.annotation.**
+-dontwarn kotlin.**
+-dontwarn com.android.volley.toolbox.**
