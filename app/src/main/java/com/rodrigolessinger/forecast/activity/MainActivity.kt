@@ -5,6 +5,8 @@ import android.support.design.widget.FloatingActionButton
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.Menu
+import android.view.MenuItem
 import com.rodrigolessinger.forecast.R
 import com.rodrigolessinger.forecast.adapter.CityListAdapter
 import com.rodrigolessinger.forecast.extension.observeOnMainThread
@@ -26,6 +28,25 @@ class MainActivity : BaseActivity() {
 
     @Inject protected lateinit var repository: WeatherRepository
 
+    private fun refresh() {
+        repository.refresh()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_refresh -> {
+                refresh()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -40,9 +61,7 @@ class MainActivity : BaseActivity() {
 
         addButton.setOnClickListener { AddCityActivity.startActivity(this@MainActivity) }
 
-        swipeRefresh.setOnRefreshListener {
-            repository.refresh()
-        }
+        swipeRefresh.setOnRefreshListener { refresh() }
     }
 
     override fun onSubscribable() {

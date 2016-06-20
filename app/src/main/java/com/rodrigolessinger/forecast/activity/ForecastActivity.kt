@@ -75,6 +75,10 @@ class ForecastActivity : BaseActivity() {
                 .show()
     }
 
+    private fun refreshItem() {
+        repository.refreshForecast(cityId)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_forecast, menu)
         return true
@@ -84,7 +88,11 @@ class ForecastActivity : BaseActivity() {
         when (item?.itemId) {
             R.id.action_delete -> {
                 deleteItem()
-                return true;
+                return true
+            }
+            R.id.action_refresh -> {
+                refreshItem()
+                return true
             }
             else -> return super.onOptionsItemSelected(item)
         }
@@ -125,9 +133,7 @@ class ForecastActivity : BaseActivity() {
 
         adapter.setColor(lightColor)
 
-        swipeRefresh.setOnRefreshListener {
-            repository.refreshForecast(cityId)
-        }
+        swipeRefresh.setOnRefreshListener { refreshItem() }
     }
 
     private fun onError() {

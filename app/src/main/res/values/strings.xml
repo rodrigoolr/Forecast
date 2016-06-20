@@ -11,6 +11,8 @@
     </string-array>
 
     <string name="menu_delete">Delete</string>
+    <string name="menu_refresh">Refresh</string>
+
     <string name="confirm_delete_message">Delete this city\'s forecast?</string>
     <string name="confirm_delete_positive">DELETE</string>
     <string name="confirm_delete_negative">CANCEL</string>
