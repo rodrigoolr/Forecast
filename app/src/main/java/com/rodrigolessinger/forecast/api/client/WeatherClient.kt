@@ -3,6 +3,7 @@ package com.rodrigolessinger.forecast.api.client
 import android.content.res.Resources
 import com.rodrigolessinger.forecast.BuildConfig
 import com.rodrigolessinger.forecast.R
+import com.rodrigolessinger.forecast.di.ForApplication
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -17,7 +18,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class WeatherClient @Inject constructor(
-        private val resources: Resources
+        @ForApplication private val resources: Resources
 ) {
 
     private val API_KEY_PARAMETER = "appid"

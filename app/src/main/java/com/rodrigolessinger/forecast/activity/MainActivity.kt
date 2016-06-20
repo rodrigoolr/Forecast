@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
-import com.rodrigolessinger.forecast.ActivityComponent
 import com.rodrigolessinger.forecast.R
 import com.rodrigolessinger.forecast.adapter.CityListAdapter
 import com.rodrigolessinger.forecast.api.client.WeatherClient
@@ -26,7 +25,8 @@ class MainActivity : AppCompatActivity() {
         private val TAG = "MAIN_ACTIVITY"
     }
 
-    private lateinit var component: ActivityComponent
+    lateinit var component: ActivityComponent
+        private set
 
     private val toolbar by lazy { findViewById(R.id.toolbar) as Toolbar }
     private val fab by lazy { findViewById(R.id.fab) as FloatingActionButton }

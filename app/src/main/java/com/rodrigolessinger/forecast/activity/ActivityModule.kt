@@ -1,11 +1,12 @@
-package com.rodrigolessinger.forecast
+package com.rodrigolessinger.forecast.activity
 
 import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
+import com.rodrigolessinger.forecast.di.ForActivity
+import com.rodrigolessinger.forecast.di.PerActivity
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 
 @Module
 open class ActivityModule(
@@ -13,13 +14,21 @@ open class ActivityModule(
 ) {
 
     @Provides
-    @Singleton
+    @PerActivity
+    internal fun provideActivity(): Activity {
+        return activity
+    }
+
+    @Provides
+    @PerActivity
+    @ForActivity
     fun provideContext(): Context {
         return activity
     }
 
     @Provides
-    @Singleton
+    @PerActivity
+    @ForActivity
     fun provideResources(): Resources {
         return activity.resources
     }
