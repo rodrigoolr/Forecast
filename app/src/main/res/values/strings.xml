@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">Forecast</string>
-    <string name="open_weather_key">faa1f1417f06f0d0486d3dbeb7229772</string>
+    <string name="open_weather_key" translatable="false">faa1f1417f06f0d0486d3dbeb7229772</string>
     <string name="language">en</string>
 
-    <string-array name="initial_cities">
+    <string-array name="initial_cities" translatable="false">
         <item>Sao Paulo,BR</item>
         <item>Recife,BR</item>
         <item>Lima,PE</item>
