@@ -20,4 +20,9 @@ class WeatherCache @Inject constructor() : RealmCache<CityWeather>() {
                 .map { it?.firstOrNull() }
     }
 
+    fun remove(obj: CityWeather) {
+        val realmObj = getRealm().where(CityWeather::class.java).equalTo("id", obj.id).findFirst()
+        if (realmObj != null) removeRealmObject(realmObj)
+    }
+
 }

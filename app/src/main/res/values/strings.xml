@@ -1,4 +1,15 @@
 <resources>
     <string name="app_name">Forecast</string>
     <string name="open_weather_key">faa1f1417f06f0d0486d3dbeb7229772</string>
+
+    <string name="title_activity_add_city">Adicionar cidade</string>
+    <string name="city_hint">Cidade</string>
+    <string name="country_hint">País (opcional)</string>
+    <string name="search_button">PROCURAR</string>
+    <string name="invalid_city_name">O nome da cidade deve conter ao menos 3 caracteres</string>
+    <string name="invalid_country_name">O nome do país deve conter ao menos 2 caracteres</string>
+    <string name="add_city_message">Deseja adicionar {city}, {country}?</string>
+    <string name="add_city_confirm">ADICIONAR</string>
+    <string name="add_city_cancel">CANCELAR</string>
+    <string name="error_adding_city">Ocorreu um erro ao procurar por essa cidade</string>
 </resources>

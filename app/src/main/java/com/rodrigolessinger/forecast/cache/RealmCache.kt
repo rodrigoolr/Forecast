@@ -72,4 +72,10 @@ open class RealmCache<T: RealmObject>() {
             }
         }
     }
+
+    protected fun removeRealmObject(obj: T) {
+        executeTransaction {
+            obj.deleteFromRealm()
+        }
+    }
 }

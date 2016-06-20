@@ -6,6 +6,7 @@ import rx.Subscriber
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by Rodrigo on 19/06/2016.
@@ -28,6 +29,21 @@ fun <T> Observable<T?>.filterNotNull(): Observable<T> {
 
 fun <T, V> Observable<T>.convert(converter: ModelConverter<T, V>): Observable<V> {
     return this.map { converter.convert(it) }
+}
+
+fun <T> Observable<T>.debounceIf(condition: (T) -> Boolean, delay: Long, unit: TimeUnit): Observable<T> {
+    return this.debounce { obj ->
+        if (condition(obj)) Observable.timer(delay, unit)
+        else Observable.just(0L)
+    }
+}
+
+fun Observable<Boolean>.debounceIfTrue(delay: Long, unit: TimeUnit): Observable<Boolean> {
+    return this.debounceIf({ boolObj -> boolObj }, delay, unit)
+}
+
+fun Observable<Boolean>.debounceIfFalse(delay: Long, unit: TimeUnit): Observable<Boolean> {
+    return this.debounceIf({ boolObj -> ! boolObj }, delay, unit)
 }
 
 private abstract class OneShotSubscriber<T>() : Subscriber<T>() {

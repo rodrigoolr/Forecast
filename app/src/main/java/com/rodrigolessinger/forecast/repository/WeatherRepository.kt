@@ -166,15 +166,19 @@ class WeatherRepository @Inject constructor(
                 )
     }
 
-    fun add(cityName: String) {
+    fun add(cityName: String, onSuccess: ((CityWeather) -> Unit)? = null, onError: (() -> Unit)? = null) {
         service.getCurrentWeatherByCityName(cityName)
                 .subscribeOnIo()
                 .convert(CityWeatherConverter())
                 .doOnNext { it.lastUpdate = Date() }
                 .subscribeOnce(
-                        { cache.add(it) },
-                        { Log.e(TAG, "Error adding new city", it) }
+                        { cache.add(it); if (onSuccess != null) onSuccess(it) },
+                        { Log.e(TAG, "Error adding new city", it); if (onError != null) onError() }
                 )
+    }
+
+    fun remove(cityWeather: CityWeather) {
+        cache.remove(cityWeather)
     }
 
 }

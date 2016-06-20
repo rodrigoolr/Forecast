@@ -16,7 +16,7 @@ class MainActivity : BaseActivity() {
         private val TAG = "MAIN_ACTIVITY"
     }
 
-    private val fab by lazy { findViewById(R.id.fab) as FloatingActionButton }
+    private val addButton by lazy { findViewById(R.id.add_button) as FloatingActionButton }
 
     private val cityList by lazy { findViewById(R.id.city_list) as RecyclerView }
     @Inject protected lateinit var adapter: CityListAdapter
@@ -34,6 +34,8 @@ class MainActivity : BaseActivity() {
         cityList.setHasFixedSize(true)
         cityList.layoutManager = LinearLayoutManager(this)
         cityList.adapter = adapter
+
+        addButton.setOnClickListener { AddCityActivity.startActivity(this@MainActivity) }
     }
 
     override fun onSubscribable() {
